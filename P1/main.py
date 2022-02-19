@@ -1,5 +1,9 @@
 from random import randrange
 
+RED = "\033[2;31;40m"
+CYAN = "\033[2;36;40m"
+GREEN = "\033[2;32;40m"
+CLEAR_COLOR = "\033[0;0m"
 def str_to_ascii_to_bin(input_string):
     result = ""
     for i in range(len(input_string)):
@@ -26,24 +30,25 @@ def random_key(message):
             result = '0' + result
     return result
 
-message = "Hola Mundo!"
-print ("Mensaje: " + message + "\n")
-result_transcoding = str_to_ascii_to_bin(message)
-print ("Mensaje en ASCII a binario: " + result_transcoding + "\n")
-result_key = random_key(result_transcoding)
-print("Llave generada: " + result_key + "\n")
-encripted_message = xor_strings(result_transcoding,result_key)
-print("Mensaje encriptado en binario: " + encripted_message + "\n")
+message = input("¿Que mensaje quieres encriptar?\n")
 
-print("Mensaje encriptado en ASCII: " + bin_to_ascii_to_str(encripted_message) + "\n")
+print (CYAN+"\nMensaje: " + CLEAR_COLOR  + message + "\n")
+result_transcoding = str_to_ascii_to_bin(message)
+print (GREEN + "Mensaje en ASCII a binario: " + CLEAR_COLOR  + result_transcoding + "\n")
+result_key = random_key(result_transcoding)
+print(RED + "Llave generada: " + CLEAR_COLOR  + result_key + "\n")
+encripted_message = xor_strings(result_transcoding,result_key)
+print(GREEN + "Mensaje encriptado en binario: " + CLEAR_COLOR  + encripted_message + "\n")
+
+print(CYAN+"Mensaje encriptado en ASCII: " + CLEAR_COLOR  + bin_to_ascii_to_str(encripted_message) + "\n")
 
 message_decoded_bin = xor_strings(encripted_message,result_key)
-print("Mensaje desencriptado en binario: " + message_decoded_bin + "\n")
+print(GREEN + "Mensaje desencriptado en binario: " + CLEAR_COLOR  + message_decoded_bin + "\n")
 
 message_decoded_ascii = bin_to_ascii_to_str(message_decoded_bin)
-print("Mensaje desencriptado en ASCII: " + message_decoded_ascii + "\n")
+print(CYAN+"Mensaje desencriptado en ASCII: " + CLEAR_COLOR  + message_decoded_ascii + "\n")
 
 if (message_decoded_bin == result_transcoding and message_decoded_ascii == message):
-    print ("\n\033[2;32;40m ¡CORRECTO! \033[0;0m")
+    print ("\n\033[2;32;40m ¡CORRECTO! " + CLEAR_COLOR )
 else:
-    print ("\033[2;31;40m ¡INCORRECTO! \033[0;0m")
+    print (RED + " ¡INCORRECTO! " + CLEAR_COLOR )
