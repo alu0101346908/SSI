@@ -1,7 +1,3 @@
-#Autor: Mario Hernandez Garcia
-#Correo: alu0101346908@ull.edu.es
-#PRACTICA 1: Entrega Vernam
-
 from random import randrange
 
 RED = "\033[2;31;40m"
