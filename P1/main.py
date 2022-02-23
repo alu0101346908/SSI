@@ -44,7 +44,7 @@ def random_key(bin_message):
     return result
 
 message = input("¿Que mensaje quieres encriptar?\n")
-key = input(f"Introduzca la clave o presione enter para usar una pseudoaleatoria (longitud mensaje {len(message)})\n")
+key = input(f"Introduzca la clave o presione enter para usar una pseudoaleatoria (longitud mensaje {len(message)*8})\n")
 while (not all(char in '01' for char in key)):
     key = input("Error. Clave no binaria. Vuelve a introducirlo\n")
 
