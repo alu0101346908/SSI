@@ -1,13 +1,14 @@
 #Autor: Mario Hernandez Garcia
 #Email: alu0101346908@ull.edu.es
+#Práctica 2: Entrega RC4
 
 #Modulo de la libreria random para generar numeros aleatorios
 import random 
 from random import randrange
 
 
-
-
+#Funcion que recibe la llave solicitada por pantalla con la que se generara el vector K clave, se inicializara ademas el vector S de 0 a 256 con
+# que posteriormente se intercambiara los valores con el vector K clave
 def initialize(key_vector):
     S = []
     K = []
@@ -18,17 +19,19 @@ def initialize(key_vector):
     for i in range(256):
             j = (j+S[i]+K[i]) % 256
             S[i] , S[j] = S[j], S[i]
-    #for i in range(0,255):
-    #print(f'{S}\n')
     return S
 
-def prga(initializedArray, message):
+
+#Funcion que recibe el vector S inicializado y el mensaje del que se usara su tamaño binario para calcular el numero de bytes cifrantes necesarios
+# se procedera al algoritmo de prga guardando en sequence todos los bytes cifrantes que se uniran posteriormente para realizar la operacion xor
+
+def prga(initializedArray, message_bin):
     j = 0
     k = 0
     i = 0
     t = 0
     sequence = []
-    for k in range(round(len(message)/8)):
+    for k in range(round(len(message_bin)/8)):
         i = (i + 1) % 256
         j = (j + initializedArray[i]) % 256
         t = (initializedArray[i] + initializedArray[j]) % 256
@@ -48,6 +51,7 @@ def prga(initializedArray, message):
         sequence_result += result
     return sequence_result
 
+# Funcion que simplemente invoca a la funcion xor_strings, para generalizar
 def encrypt(key,message):
     return xor_strings(message,key)
 
