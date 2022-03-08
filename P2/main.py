@@ -8,19 +8,12 @@ from random import randrange
 
 
 
-def initialize(seed):
-    key_vector = []
-    for i in range(8):
-        random.seed(seed_array[i])
-        key = randrange(256)
-        key_vector.append(key)
-        key_vector.sort()
-    print(key_vector)
+def initialize(key_vector):
     S = []
     K = []
     for i in range(0,256):
         S.append(i)
-        K.append(key_vector[i%len(key_vector)])
+        K.append(int(key_vector[i%len(key_vector)]))
     j = 0
     for i in range(256):
             j = (j+S[i]+K[i]) % 256
@@ -36,9 +29,9 @@ def prga(initializedArray, message):
     t = 0
     sequence = []
     for k in range(round(len(message)/8)):
-        i = (i + 1) % 255
-        j = (j + initializedArray[i]) % 255
-        t = (initializedArray[i] + initializedArray[j]) % 255
+        i = (i + 1) % 256
+        j = (j + initializedArray[i]) % 256
+        t = (initializedArray[i] + initializedArray[j]) % 256
         #print(initializedArray[j])
         initializedArray[i], initializedArray[j] = initializedArray[j] , initializedArray[i]
         sequence.append(initializedArray[t])
@@ -93,53 +86,55 @@ def bin_to_ascii_to_str(input_string):
 
 #Funcion generadora de llaves la cual recibe el mensaje en binario para sacar su longitud y asi poder hacer que la clave tenga la misma longitud. 
 # La funcion random utiliza la longitud del mensaje como valor tope a generar aleatoriamente. El resultado normalmente tiene menor longitud por lo que lo rellenamos con 0 a la izquierda
-def random_key(bin_message):
-    result = bin(randrange(pow(2,len(bin_message))))[2:]
-    if (len(result) < len(bin_message)):
-        while len(result) < len(bin_message):
-            result = '0' + result
-    return result
+#def random_key(bin_message):
+    #result = bin(randrange(pow(2,len(bin_message))))[2:]
+    #if (len(result) < len(bin_message)):
+        #while len(result) < len(bin_message):
+            #result = '0' + result
+    #return result
 
 message = input("¿Que mensaje quieres encriptar?\n")
-seed_array = []
-for i in range(8):
-    seed_array.append(random.randrange(999999999999999999))
-encrypted_message = encrypt(prga(initialize(seed_array),str_to_ascii_to_bin(message)),str_to_ascii_to_bin(message))
+key_message = input("Introduzca la clave separandolo por comas (42, 1, 456)\n")
+if " " in key_message:
+    key_vector = key_message.split(", ")
+else:
+    key_vector = key_message.split(",")
+
+print("Vector de Clave:"+key_vector)
+encrypted_message = encrypt(prga(initialize(key_vector),str_to_ascii_to_bin(message)),str_to_ascii_to_bin(message))
 encrypted_message_string = bin_to_ascii_to_str(encrypted_message)
-print (encrypted_message)
-print (encrypted_message_string)
-decrypted_message = encrypt(prga(initialize(seed_array),encrypted_message),encrypted_message)
+#print (encrypted_message)
+#print (encrypted_message_string)
+decrypted_message = encrypt(prga(initialize(key_vector),encrypted_message),encrypted_message)
 decrypted_message_string = bin_to_ascii_to_str(decrypted_message)
-print (decrypted_message)
-print (decrypted_message_string)
-key = input(f"Introduzca la clave o presione enter para usar una pseudoaleatoria (longitud mensaje {len(message)*8})\n")
-while (not all(char in '01' for char in key)):
-    key = input("Error. Clave no binaria. Vuelve a introducirlo\n")
+#print (decrypted_message)
+#print (decrypted_message_string)
+# key = input(f"Introduzca la clave o presione enter para usar una pseudoaleatoria (longitud mensaje {len(message)*8})\n")
+# while (not all(char in '01' for char in key)):
+    # key = input("Error. Clave no binaria. Vuelve a introducirlo\n")
 
 print (CYAN+"\nMensaje: " + CLEAR_COLOR  + message + "\n")
 result_transcoding = str_to_ascii_to_bin(message)
 print (GREEN + "Mensaje en ASCII a binario: " + CLEAR_COLOR  + result_transcoding + "\n")
-if (len(key) == 0):
-    key = random_key(result_transcoding)
-    print(RED + "Llave generada: " + CLEAR_COLOR  + key + "\n")
-else:
-    if (len(key) < len(result_transcoding)):
-        while len(key) < len(result_transcoding):
-            key = '1' + key
-    print(RED + "Llave: " + CLEAR_COLOR  + key + "\n")
+# if (len(key) == 0):
+    #key = random_key(result_transcoding)
+    #print(RED + "Llave generada: " + CLEAR_COLOR  + key + "\n")
+#else:
+    #if (len(key) < len(result_transcoding)):
+        #while len(key) < len(result_transcoding):
+            #key = '1' + key
+    #print(RED + "Llave: " + CLEAR_COLOR  + key + "\n")
 
-encripted_message = xor_strings(result_transcoding,key)
-print(GREEN + "Mensaje encriptado en binario: " + CLEAR_COLOR  + encripted_message + "\n")
+#encripted_message = xor_strings(result_transcoding,key)
+print(GREEN + "Mensaje encriptado en binario: " + CLEAR_COLOR  + encrypted_message + "\n")
 
-print(CYAN+"Mensaje encriptado en ASCII: " + CLEAR_COLOR  + bin_to_ascii_to_str(encripted_message) + "\n")
+print(CYAN+"Mensaje encriptado en ASCII: " + CLEAR_COLOR  + bin_to_ascii_to_str(encrypted_message) + "\n")
 
-message_decoded_bin = xor_strings(encripted_message,key)
-print(GREEN + "Mensaje desencriptado en binario: " + CLEAR_COLOR  + message_decoded_bin + "\n")
+print(GREEN + "Mensaje desencriptado en binario: " + CLEAR_COLOR  + decrypted_message + "\n")
 
-message_decoded_ascii = bin_to_ascii_to_str(message_decoded_bin)
-print(CYAN+"Mensaje desencriptado en ASCII: " + CLEAR_COLOR  + message_decoded_ascii + "\n")
+print(CYAN+"Mensaje desencriptado en ASCII: " + CLEAR_COLOR  + decrypted_message_string + "\n")
 
-if (message_decoded_bin == result_transcoding and message_decoded_ascii == message):
+if (decrypted_message == result_transcoding and decrypted_message_string == message):
     print ("\n\033[2;32;40m ¡CORRECTO! " + CLEAR_COLOR )
 else:
     print (RED + " ¡INCORRECTO! " + CLEAR_COLOR )
