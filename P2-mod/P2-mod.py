@@ -21,24 +21,29 @@ def initialize(key_vector):
             S[i] , S[j] = S[j], S[i]
     return S
 
+#w primo de 256 --> impar
 
-#Funcion que recibe el vector S inicializado y el mensaje del que se usara su tamaño binario para calcular el numero de bytes cifrantes necesarios
-# se procedera al algoritmo de prga guardando en sequence todos los bytes cifrantes que se uniran posteriormente para realizar la operacion xor
+#Funcion que recibe el vector S inicializado y el mensaje del que se usara su tamaño binario para calcular el numero de bytes cifrantes necesarios, ademas como es la modificacion
+# se le pasa el valor N que = w y es primo de 256, se procedera al algoritmo de prga Spritz guardando en sequence todos los bytes cifrantes que se uniran posteriormente para realizar la operacion xor
 
-def prga(initializedArray, message_bin):
+def prga(initializedArray, message_bin, n):
     j = 0
     k = 0
     i = 0
-    t = 0
+    x = 0
+    z = 0
+    w = n
     sequence = []
-    for k in range(round(len(message_bin)/8)):
-        i = (i + 1) % 256
-        j = (j + initializedArray[i]) % 256
-        t = (initializedArray[i] + initializedArray[j]) % 256
+    for x in range(round(len(message_bin)/8)):
+        i = i + w
+        j = (k + initializedArray[(j + initializedArray[i])%256]) % 256
+        k = (k + i + initializedArray[j]) % 256
         #print(initializedArray[j])
         initializedArray[i], initializedArray[j] = initializedArray[j] , initializedArray[i]
-        sequence.append(initializedArray[t])
+        z = initializedArray[(j+initializedArray[(i+initializedArray[(z+k)%256])%256])%256]
+        sequence.append(z)
     sequence_result = ''
+    k = 0
     for value in sequence:
         bin_result = bin(value)[2:]
         result = ''
@@ -49,6 +54,9 @@ def prga(initializedArray, message_bin):
                 bin_result = '0' + bin_result
             result += bin_result
         sequence_result += result
+        k +=1
+        print(f'Byte de secuencia cifrante {k} = {result}')
+    print("\n")
     return sequence_result
 
 # Funcion que simplemente invoca a la funcion xor_strings, para generalizar
@@ -103,13 +111,24 @@ if " " in key_message:
     key_vector = key_message.split(", ")
 else:
     key_vector = key_message.split(",")
-
-print("Vector de Clave:"+key_vector)
-encrypted_message = encrypt(prga(initialize(key_vector),str_to_ascii_to_bin(message)),str_to_ascii_to_bin(message))
+odd = False
+while (not odd):
+    n = input("Introduzca una N que debe ser impar y < 256\n") # Realmente primo con N 
+    if(int(n) % 2 != 0):
+        odd = True
+    else:
+        odd = False
+        print("Ha introducido un numero que no es impar, vuelva a intentarlo\n")
+print(f'Vector de Clave: {key_vector}')
+print(GREEN + "Encriptacion" +CLEAR_COLOR+"\n")
+encryption = prga(initialize(key_vector),str_to_ascii_to_bin(message),odd)
+encrypted_message = encrypt(encryption,str_to_ascii_to_bin(message))
 encrypted_message_string = bin_to_ascii_to_str(encrypted_message)
 #print (encrypted_message)
 #print (encrypted_message_string)
-decrypted_message = encrypt(prga(initialize(key_vector),encrypted_message),encrypted_message)
+print(GREEN + "Desencriptado" +CLEAR_COLOR+"\n")
+encryption2 = prga(initialize(key_vector),encrypted_message,odd)
+decrypted_message = encrypt(encryption2,encrypted_message)
 decrypted_message_string = bin_to_ascii_to_str(decrypted_message)
 #print (decrypted_message)
 #print (decrypted_message_string)
@@ -117,7 +136,7 @@ decrypted_message_string = bin_to_ascii_to_str(decrypted_message)
 # while (not all(char in '01' for char in key)):
     # key = input("Error. Clave no binaria. Vuelve a introducirlo\n")
 
-print (CYAN+"\nMensaje: " + CLEAR_COLOR  + message + "\n")
+print ("\n"+ CYAN+ "Mensaje: " + CLEAR_COLOR  + message + "\n")
 result_transcoding = str_to_ascii_to_bin(message)
 print (GREEN + "Mensaje en ASCII a binario: " + CLEAR_COLOR  + result_transcoding + "\n")
 # if (len(key) == 0):
@@ -130,9 +149,13 @@ print (GREEN + "Mensaje en ASCII a binario: " + CLEAR_COLOR  + result_transcodin
     #print(RED + "Llave: " + CLEAR_COLOR  + key + "\n")
 
 #encripted_message = xor_strings(result_transcoding,key)
+print(CYAN + "Claves cifrantes :"+CLEAR_COLOR + encryption + "\n")
+
 print(GREEN + "Mensaje encriptado en binario: " + CLEAR_COLOR  + encrypted_message + "\n")
 
 print(CYAN+"Mensaje encriptado en ASCII: " + CLEAR_COLOR  + bin_to_ascii_to_str(encrypted_message) + "\n")
+
+print(CYAN + "Claves descifrantes :"+CLEAR_COLOR + encryption2 + "\n")
 
 print(GREEN + "Mensaje desencriptado en binario: " + CLEAR_COLOR  + decrypted_message + "\n")
 
