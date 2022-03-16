@@ -1,3 +1,8 @@
+// Mario Hernandez Garcia
+// alu0101346908@ull.edu.es
+// g++ -g chacha20.cpp -o chacha20
+
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string>
@@ -104,39 +109,6 @@ vector<uint32_t> StringHexToUint(string input){
 
 }
 
-
-const char* hex_char_to_bin(char c)
-{
-    switch(toupper(c))
-    {
-        case '0': return "0000";
-        case '1': return "0001";
-        case '2': return "0010";
-        case '3': return "0011";
-        case '4': return "0100";
-        case '5': return "0101";
-        case '6': return "0110";
-        case '7': return "0111";
-        case '8': return "1000";
-        case '9': return "1001";
-        case 'A': return "1010";
-        case 'B': return "1011";
-        case 'C': return "1100";
-        case 'D': return "1101";
-        case 'E': return "1110";
-        case 'F': return "1111";
-    }
-}
-
-std::string hex_str_to_bin_str(const std::string& hex)
-{
-    // TODO use a loop from <algorithm> or smth
-    std::string bin;
-    for(unsigned i = 0; i != hex.length(); ++i)
-       bin += hex_char_to_bin(hex[i]);
-    return bin;
-}
-
 vector<uint32_t> initialize(vector<uint32_t>&cons ,vector<uint32_t> &key, uint32_t &counter, vector<uint32_t> &nonce){
   vector<uint32_t> block;
   for(int i = 0; i < cons.size(); ++i){
@@ -174,15 +146,15 @@ string encrypt(string text, vector<uint32_t> cypher) {
   std::stringstream stream;
   string key = "";
   string encripted = "";
-  for (int i = 0; i < text.length(); ++i) {
+  for (int i = 0; i < text.size(); ++i) {
     stream << setw(8) << setfill('0') << std::hex << cypher[i];
     std::string result(stream.str());
     key += result;
     stream.str("");
   }
   string byte = "";
-  for (int i = 0; i < text.length(); ++i) {
-    encripted += int(text[i])^stoi(key.substr(i*2,2),nullptr,16);
+  for (int i = 0; i < text.size(); ++i) {
+    encripted += ((int)(text[i])^stoi(key.substr(i*2,2),nullptr,16));
 
   }
   return encripted;
@@ -203,10 +175,10 @@ int main (void) {
   cout << "Estado de salida del generador=" << endl;
   printBlock(out);
   string message = "Hola";
-  string encriptado = encrypt(message, block);
+  string encriptado = encrypt(message, out);
   cout << "Mensaje a encriptar: " << message << endl;
   cout << "Mensaje encriptado: " << encriptado << endl;
-  cout << "Mensaje desencriptado: " << encrypt(encriptado, block) << endl;
+  cout << "Mensaje desencriptado: " << encrypt(encriptado, out) << endl;
 }
 
 
