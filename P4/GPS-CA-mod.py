@@ -1,6 +1,6 @@
 #Autor: Mario Hernandez Garcia
 #Email: alu0101346908@ull.edu.es
-#Práctica 4: Generador C/A de GPS
+#Práctica 4: Generador C/A de GPS mod polinomio realimentacion LSFR1 por id de satelite
 
 #Costantes de colores para la salida por pantalla
 RED = "\033[2;31;40m"
