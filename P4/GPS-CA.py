@@ -49,6 +49,20 @@ def rightShift(inputLFSR, re_polinomy, out_polinomy):
   print(f"Realimentacion: {xor_result1}")
   return [dummy_vector,xor_result2];
 
+def gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, polinomy_re_1, polinomy_re_2):
+  out_1 = 0
+  out_2 = 0
+  dummy = ""
+  for i in range(int(cypher_length)):
+    print("\nLSFR1: ")
+    print(result_vector_1)
+    [result_vector_1,out_1] = rightShift(result_vector_1, polinomy_re_1, polinomy_out_1)
+    print("\nLSFR2: ")
+    print(result_vector_2)
+    [result_vector_2,out_2] = rightShift(result_vector_2, polinomy_re_2, polinomy_out_2)
+    print(f"\nBit cifrante {i+1} :" + str((out_1^out_2)))
+    dummy += str((out_1^out_2))
+  return dummy
 def idDictionary(id_sat):
   if (id_sat == 1):
     return [2,6]
@@ -119,21 +133,27 @@ polinomy_re_1 = [3,10]
 polinomy_out_1 = [10]
 result_vector_1 = [1,1,1,1,1,1,1,1,1,1]
 polinomy_re_2 = [2,3,6,8,9,10]
+print("Introduzca el mensaje a encriptar:")
+message = input()
+cypher_length = len(message)*8
 print("Introduzca el id del satelite (1-32):")
 id_sat = input()
-print("Introduzca la longitud de la secuencia de salida:")
-cypher_length = input()
+#print("Introduzca la longitud de la secuencia de salida:")
+#cypher_length = input()
 polinomy_out_2 = idDictionary(int(id_sat))
 result_vector_2 = [1,1,1,1,1,1,1,1,1,1]
-dummy = ""
-for i in range(int(cypher_length)):
-  print("\nLSFR1: ")
-  print(result_vector_1)
-  [result_vector_1,out_1] = rightShift(result_vector_1, polinomy_re_1, polinomy_out_1)
-  print("\nLSFR2: ")
-  print(result_vector_2)
-  [result_vector_2,out_2] = rightShift(result_vector_2, polinomy_re_2, polinomy_out_2)
-  print(f"\nBit cifrante {i+1} :" + str((out_1^out_2)))
-  dummy += str((out_1^out_2))
+dummy = gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, polinomy_re_1, polinomy_re_2)
 
 print(f"Secuencia C/A PRN1 de longitud {str(cypher_length)} : {dummy}")
+encrypted_message_bin = xor_strings(dummy,str_to_ascii_to_bin(message))
+encrypted_message_ascii = bin_to_ascii_to_str(encrypted_message_bin)
+print(f"Mensaje encriptado binario: \n {encrypted_message_bin} ")
+print(f"Mensaje encriptado ascii: \n {encrypted_message_ascii} ")
+
+dummy = gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, polinomy_re_1, polinomy_re_2)
+
+print(f"Secuencia descifrante C/A PRN1 de longitud {str(cypher_length)} : {dummy}")
+decrypted_message_bin = xor_strings(encrypted_message_bin,dummy)
+decrypted_message_ascii = bin_to_ascii_to_str(decrypted_message_bin)
+print(f"Mensaje desencriptado binario: \n {decrypted_message_bin} ")
+print(f"Mensaje desencriptado ascii: \n {decrypted_message_ascii} ")
