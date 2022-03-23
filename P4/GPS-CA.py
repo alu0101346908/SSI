@@ -151,6 +151,7 @@ polinomy_out_2 = idDictionary(int(id_sat))
 result_vector_2 = [1,1,1,1,1,1,1,1,1,1]
 dummy = gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, polinomy_re_1, polinomy_re_2)
 
+print(f"Mensaje en binario: \n {str_to_ascii_to_bin(message)} ")
 print(f"Secuencia C/A PRN1 de longitud {str(cypher_length)} : {dummy}")
 encrypted_message_bin = xor_strings(dummy,str_to_ascii_to_bin(message))
 encrypted_message_ascii = bin_to_ascii_to_str(encrypted_message_bin)
