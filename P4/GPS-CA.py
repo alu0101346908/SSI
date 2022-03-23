@@ -32,6 +32,9 @@ def xor_strings(s,t):
 def bin_to_ascii_to_str(input_string):
     return "".join([chr(int(input_string[i:i+8],2)) for i in range(0,len(input_string),8)])
 
+
+#Recibe el vector del generador, los polinomios de realimentacion y los de salida, en la funcion se desplaza el vector a la derecha, se hacen las operaciones xor entre los valores que definen los polinomios
+#y se añade al principio del vector el resultado de el xor de realimentacion, se devuelve el resultado de las xor del polinomio de salida
 def rightShift(inputLFSR, re_polinomy, out_polinomy):
   dummy_vector = [0] + (inputLFSR[0:len(inputLFSR)-1])
   for i in range(len(re_polinomy)):
@@ -49,6 +52,8 @@ def rightShift(inputLFSR, re_polinomy, out_polinomy):
   print(f"Realimentacion: {xor_result1}")
   return [dummy_vector,xor_result2];
 
+#Algoritmo gps C/A, recibe los vectores de los LSFR inicializados a 1, los polinomios de ambos tanto de salida como de entrada y el numero de iteraciones a realizar
+#Devuelve todos los bits cifrantes de resultantes de las iteraciones
 def gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, polinomy_re_1, polinomy_re_2):
   out_1 = 0
   out_2 = 0
@@ -63,6 +68,8 @@ def gpsCA(result_vector_1, result_vector_2, polinomy_out_1, polinomy_out_2, poli
     print(f"\nBit cifrante {i+1} :" + str((out_1^out_2)))
     dummy += str((out_1^out_2))
   return dummy
+
+ #Diccionario que se utiliza para obtener los Taps segun el id del satelite que queramos 
 def idDictionary(id_sat):
   if (id_sat == 1):
     return [2,6]
