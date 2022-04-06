@@ -160,7 +160,6 @@ def key_expansion(key):
 def add_round_key(state, key_schedule, round):
     key = key_schedule[round]
     for col in range(nk):
-        # nb*round is a shift which indicates start of a part of the KeySchedule
         s0 = state[0][col] ^ key[0+((col*4))]
         s1 = state[1][col] ^ key[1+((col*4))]
         s2 = state[2][col] ^ key[2+((col*4))]
@@ -174,7 +173,6 @@ def add_round_key(state, key_schedule, round):
     return state
 
 
-# Small helpful functions block
 
 def left_shift(array, count):
     res = array
@@ -182,16 +180,6 @@ def left_shift(array, count):
         temp = res[1:]
         temp.append(res[0])
         res = temp
-
-    return res
-
-
-def right_shift(array, count):
-    res = array
-    for i in range(count):
-        tmp = res[:-1]
-        tmp.insert(0, res[-1])
-        res = tmp
 
     return res
 
