@@ -32,7 +32,7 @@ rcon = [[0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36],
         [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 ]
 
-
+# Funcion que inicializa el proceso de cifrado en bloque en modo CBC utilizando el cifrado AES, recibe el vector de bloques, la clave y el IV
 def start(input_bytes, key, iv):
     result = []
     for i in range(0,len(input_bytes)):
@@ -225,12 +225,12 @@ block2 = input()
 print('Introduzca el IV (128bits en hex)')
 iv = input()
 print('\n')
-print (f'\nBloque de Texto Cifrado: '+ start([block1, block2],key, iv))
+# print (f'\nBloque de Texto Cifrado: '+ start([block1, block2],key, iv))
 print('\n')
 # start(['00112233445566778899AABBCCDDEEFF', '000000000000000000000000000000'],'000102030405060708090A0B0C0D0E0F', '00000000000000000000000000000000')
 start([block1, block2], key, iv)
 
-# BLOCK 1'00112233445566778899AABBCCDDEEFF'
-# BLOCK 2'000000000000000000000000000000'
+# BLOCK 1 '00112233445566778899AABBCCDDEEFF'
+# BLOCK 2 '000000000000000000000000000000'
 # KEY '000102030405060708090A0B0C0D0E0F'
 # IV '00000000000000000000000000000000'
