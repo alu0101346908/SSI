@@ -44,10 +44,8 @@ print('Introduzca el mensaje (m)')
 message = int(input())
 
 yA = fastExp(a, xA, py)
-print(f'yA = {yA}')
 
 yB = fastExp(a, xB, py)
-print(f'yB = {yB}')
 
 kA = fastExp(yB, xA, py)
 
@@ -58,13 +56,9 @@ if (kA == kB):
 else:
   k = -1
 
-print(f'k = {k}')
-
 encripted_message = (kB * message) % py
-print(f'c = {encripted_message}')
 
 invertedK = extendedEuclides(py, k)
-print(f'k^-1 = {invertedK}')
 
 decrypted_message = (encripted_message * invertedK) % py;
-print(f'm = {decrypted_message}')
+print(f'yA = {yA}, yB = {yB}, k = {k}, c = {encripted_message}, k^-1 = {invertedK}')
